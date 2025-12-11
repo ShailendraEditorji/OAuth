@@ -1,0 +1,40 @@
+# -----------------------------
+# 1. Base Image
+# -----------------------------
+FROM node:18-alpine
+
+# -----------------------------
+# 2. Install additional packages if needed
+# (Needed if using spawn, ffmpeg, compression libs)
+# -----------------------------
+RUN apk add --no-cache bash
+
+# -----------------------------
+# 3. Set working directory
+# -----------------------------
+WORKDIR /app
+
+# -----------------------------
+# 4. Copy package.json first
+# -----------------------------
+COPY package*.json ./
+
+# -----------------------------
+# 5. Install only production dependencies
+# -----------------------------
+RUN npm install --production
+
+# -----------------------------
+# 6. Copy project files
+# -----------------------------
+COPY . .
+
+# -----------------------------
+# 7. Expose port
+# -----------------------------
+EXPOSE 5000
+
+# -----------------------------
+# 8. Start server
+# -----------------------------
+CMD ["node", "server.js"]
